@@ -3,7 +3,6 @@ package org.robolancers321;
 
 import static org.robolancers321.util.MathUtils.epsilonEquals;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -23,6 +22,7 @@ import org.robolancers321.Constants.FlywheelConstants;
 import org.robolancers321.Constants.PivotConstants;
 import org.robolancers321.Constants.RetractorConstants;
 import org.robolancers321.Constants.RetractorConstants.RetractorSetpoint;
+import org.robolancers321.commands.AutoCommands.PathAndRetract;
 import org.robolancers321.commands.AutoPickupNote;
 import org.robolancers321.commands.EmergencyCancel;
 import org.robolancers321.commands.FeederShot;
@@ -59,20 +59,22 @@ import org.robolancers321.subsystems.launcher.Flywheel;
 import org.robolancers321.subsystems.launcher.Indexer;
 import org.robolancers321.subsystems.launcher.Pivot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 public class RobotContainer {
   private Drivetrain drivetrain;
   private Retractor retractor;
   private Sucker sucker;
-  private Pivot pivot;
-  private Indexer indexer;
-  private Flywheel flywheel;
-  private Climber climber;
-  private XboxController driverController;
-  private XboxController manipulatorController;
-  private SendableChooser<Command> autoChooser;
-  private LED led;
-  private AddressableLEDSim ledSim;
-  private boolean climbing;
+private Pivot pivot;
+private Indexer indexer;
+private Flywheel flywheel;
+private Climber climber;
+private XboxController driverController;
+private XboxController manipulatorController;
+private SendableChooser<Command> autoChooser;
+private LED led;
+private AddressableLEDSim ledSim;
+private boolean climbing;
 
   public RobotContainer() {
     this.drivetrain = Drivetrain.getInstance();
@@ -429,8 +431,7 @@ public class RobotContainer {
     // this.autoChooser.addOption(
     //     "TESTING DONT USE",
     //     new InstantCommand(
-    //             () ->
-    // this.drivetrain.setYaw(this.drivetrain.getPose().getRotation().getDegrees()))
+    //             () -> this.drivetrain.setYaw(this.drivetrain.getPose().getRotation().getDegrees()))
     //         .andThen(new PathAndRetract(PathPlannerPath.fromPathFile("Bruh"))));
 
     // this.autoChooser.addOption("4NT Sweep", new Auto4NTSweep());
