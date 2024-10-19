@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7284778050297884,
+        "y": 4.42669621430541
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.0949554723536934,
+        "y": 1.0026621579960722
+      },
+      "isLocked": false,
+      "linkedName": "BotStart"
+    },
+    {
+      "anchor": {
+        "x": 6.911799501202425,
+        "y": 0.7612043754757987
+      },
+      "prevControl": {
+        "x": 5.925105220121555,
+        "y": 0.8500068607730776
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 360.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "BotTaxi",
+  "previewStartingState": {
+    "rotation": -63.06,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

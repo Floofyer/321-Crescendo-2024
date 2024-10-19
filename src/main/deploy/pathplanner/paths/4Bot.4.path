@@ -1,0 +1,74 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.895509771048071,
+        "y": 0.8080477216589235
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.220860145001316,
+        "y": 0.8431802312962678
+      },
+      "isLocked": false,
+      "linkedName": "4Bot.3End"
+    },
+    {
+      "anchor": {
+        "x": 3.8084278165703256,
+        "y": 1.4053003854937813
+      },
+      "prevControl": {
+        "x": 4.934923252457446,
+        "y": 0.8478593450547943
+      },
+      "nextControl": {
+        "x": 2.672476671629519,
+        "y": 1.9674205396912936
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.8690078435791664,
+        "y": 4.438407050851191
+      },
+      "prevControl": {
+        "x": 1.7473205845127795,
+        "y": 3.18534754045257
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "4Bot.4End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 360.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -56.46395301569254,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "4Bot",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
