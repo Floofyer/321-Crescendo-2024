@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -38,6 +39,8 @@ import org.robolancers321.Constants;
 import org.robolancers321.Constants.DrivetrainConstants;
 import org.robolancers321.util.MathUtils;
 import org.robolancers321.util.MyAlliance;
+
+import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
@@ -328,21 +331,21 @@ public class Drivetrain extends SubsystemBase {
     return -0.5 * bestTarget.getYaw();
   }
 
-  // private Translation2d getRelativeNoteLocation() {
-  //   PhotonPipelineResult latestResult = this.noteCamera.getLatestResult();
+  private Translation2d getRelativeNoteLocation() {
+    PhotonPipelineResult latestResult = this.noteCamera.getLatestResult();
 
-  //   if (!latestResult.hasTargets()) return new Translation2d();
+    if (!latestResult.hasTargets()) return new Translation2d();
 
-  //   PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
+    PhotonTrackedTarget bestTarget = latestResult.getBestTarget();
 
-  //   // TODO: plus or minus mount pitch?
-  //   double dz =
-  //        Units.inchesToMeters(10)
-  //           / Math.tan((-bestTarget.getPitch() + 24) * Math.PI / 180.0);
-  //   double dx = dz * Math.tan(bestTarget.getYaw() * Math.PI / 180.0);
+    // TODO: plus or minus mount pitch?
+    double dz =
+         Units.inchesToMeters(10)
+            / Math.tan((-bestTarget.getPitch() + 24) * Math.PI / 180.0);
+    double dx = dz * Math.tan(bestTarget.getYaw() * Math.PI / 180.0);
 
-  //   return new Translation2d(dx, dz);
-  // }
+    return new Translation2d(dx, dz);
+  }
 
   private void initTuning() {
     SmartDashboard.putNumber(
@@ -419,9 +422,7 @@ public class Drivetrain extends SubsystemBase {
           "module " + i + "heading error: ", targetHeading - currentState[i].angle.getDegrees());
     }
 
-    // this.headingController.setPID(tunedHeadingP, tunedHeadingI, tunedHeadingD);
-
-    // double targetHeading = SmartDashboard.getNumber("drive target heading", this.getYawDeg());
+    // this.headingController.setPID(tunedHeadingP, tunedHeadingI, tunedHeadingD
 
     // this.headingController.setSetpoint(targetHeading);
 
@@ -496,11 +497,11 @@ public class Drivetrain extends SubsystemBase {
 
           // TODO: uncomment for aim assist
 
-          // double headingControllerOutput =
-          //     -this.headingController.calculate(this.getNoteAngle(), 0.0);
+          double headingControllerOutput =
+              controller.headingCalculate(getYawDeg(), this.getNoteAngle());
 
-          // if (Math.abs(this.getNoteAngle()) > DrivetrainConstants.kHeadingTolerance)
-          //   omega += 0.5 * headingControllerOutput;
+          if (Math.abs(this.getNoteAngle()) > DrivetrainConstants.kHeadingTolerance)
+            omega += 0.5 * headingControllerOutput;
 
           // Translation2d strafeVec =
           //     new Translation2d(
@@ -516,15 +517,14 @@ public class Drivetrain extends SubsystemBase {
           //                 * multiplier)
           //         .rotateBy(Rotation2d.fromDegrees(90.0));
 
-          // ChassisSpeeds speeds =
-          // swerveDrive.swerveController.getTargetSpeeds(controller.getLeftY(),
-          //         controller.getLeftX(),
-          //         controller.getRightX() * Math.PI,
-          //         swerveDrive.getOdometryHeading().getRadians(),
-          //         swerveDrive.getMaximumVelocity());
+          ChassisSpeeds speeds =
+          swerveDrive.swerveController.getTargetSpeeds(controller.getLeftY(),
+                  controller.getLeftX(),
+                  controller.getRightX() * Math.PI,
+                  swerveDrive.getOdometryHeading().getRadians(),
+                  swerveDrive.getMaximumVelocity());
 
-          // driveFieldRelative(speeds);
-
+          driveFieldRelative(speeds);
           Translation2d strafeVec =
               SwerveMath.scaleTranslation(
                   new Translation2d(
@@ -542,7 +542,20 @@ public class Drivetrain extends SubsystemBase {
         })
         .finallyDo(this::stop);
   }
-
+public Command aimAtNote(double tolerance)
+  {
+    SwerveController controller = swerveDrive.getSwerveController();
+    return run(
+        () -> {
+          drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.0,
+                                                      0.0,
+                                                      controller.headingCalculate(getYawDeg(),
+                                                                                  getRelativeNoteLocation()),
+                                                      getYawDeg())
+               );
+        }).until(() -> Math.abs(getNoteAngle() - (getYawDeg())) < tolerance);
+  } 
+  
   public Command driveCommand(
       DoubleSupplier throttleSupplier,
       DoubleSupplier strafeSupplier,
