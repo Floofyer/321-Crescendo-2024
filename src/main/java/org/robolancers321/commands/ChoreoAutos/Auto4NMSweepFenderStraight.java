@@ -2,7 +2,6 @@
 package org.robolancers321.commands.ChoreoAutos;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.robolancers321.commands.AutoCommands.PathAndIntake;
 import org.robolancers321.commands.AutoCommands.PathAndMate;
@@ -32,9 +31,8 @@ public class Auto4NMSweepFenderStraight extends SequentialCommandGroup {
 
     this.addCommands(
         // TODO: test this
-        new InstantCommand(
-            () -> this.drivetrain.setYaw(this.drivetrain.getPose().getRotation().getDegrees())),
         // new ScoreSpeakerFixedAuto(),
+        Drivetrain.getInstance().zeroToPath(PathPlannerPath.fromChoreoTrajectory("4NM-SweepFenderStraight.1")),
         new ScoreSpeakerFromDistance().onlyIf(this.indexer::entranceBeamBroken),
         new PathAndIntake(PathPlannerPath.fromChoreoTrajectory("4NM-SweepFenderStraight.1")),
         new PathAndMate(PathPlannerPath.fromChoreoTrajectory("4NM-SweepFenderStraight.2")),

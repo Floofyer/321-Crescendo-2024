@@ -3,7 +3,7 @@ package org.robolancers321.commands.PPAutos;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import java.util.List;
 import org.robolancers321.commands.AutoCommands.PathAndIntake;
@@ -35,9 +35,8 @@ public class FourMid extends SequentialCommandGroup {
     List<PathPlannerPath> pathGroup = PathPlannerAuto.getPathGroupFromAutoFile("4Mid");
 
     this.addCommands(
+        Drivetrain.getInstance().zeroToPath(pathGroup.get(0)),
         // TODO: test this
-        new InstantCommand(
-            () -> this.drivetrain.setYaw(this.drivetrain.getPose().getRotation().getDegrees())),
         new ScoreSpeakerFixedAuto(),
         new PathAndIntake(pathGroup.get(0)),
         new PathAndRetract(pathGroup.get(1)),

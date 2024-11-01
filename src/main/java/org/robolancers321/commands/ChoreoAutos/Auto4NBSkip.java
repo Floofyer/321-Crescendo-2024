@@ -2,7 +2,6 @@
 package org.robolancers321.commands.ChoreoAutos;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.robolancers321.commands.AutoCommands.PathAndIntake;
 import org.robolancers321.commands.AutoCommands.PathAndMate;
@@ -34,8 +33,7 @@ public class Auto4NBSkip extends SequentialCommandGroup {
 
     this.addCommands(
         // TODO: test this
-        new InstantCommand(
-            () -> this.drivetrain.setYaw(this.drivetrain.getPose().getRotation().getDegrees())),
+        Drivetrain.getInstance().zeroToPath(PathPlannerPath.fromChoreoTrajectory("4NB-Skip.1")),
         new ScoreSpeakerFixedAuto(),
         new PathAndIntake(PathPlannerPath.fromChoreoTrajectory("4NB-Skip.1")),
         new PathAndMate(PathPlannerPath.fromChoreoTrajectory("4NB-Skip.2")),
