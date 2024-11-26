@@ -39,8 +39,6 @@ import org.robolancers321.Constants;
 import org.robolancers321.Constants.DrivetrainConstants;
 import org.robolancers321.util.MathUtils;
 import org.robolancers321.util.MyAlliance;
-
-import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
@@ -83,8 +81,7 @@ public class Drivetrain extends SubsystemBase {
         new SwerveParser(swerveJsonDirectory)
             .createSwerveDrive(Constants.DrivetrainConstants.kMaxSpeedMetersPerSecond);
 
-
-            SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH; 
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
     this.mainCamera = new PhotonCamera(DrivetrainConstants.kMainCameraName);
     this.noteCamera = new PhotonCamera(DrivetrainConstants.kNoteCameraName);
@@ -108,7 +105,8 @@ public class Drivetrain extends SubsystemBase {
   }
 
   private void configureSwerve() {
-    swerveDrive.swerveController.setMaximumAngularVelocity(Constants.DrivetrainConstants.kMaxOmegaRadiansPerSecond);
+    swerveDrive.swerveController.setMaximumAngularVelocity(
+        Constants.DrivetrainConstants.kMaxOmegaRadiansPerSecond);
     swerveDrive.setHeadingCorrection(
         false); // Heading correction should only be used while controlling the robot via angle.
     swerveDrive.setCosineCompensator(
@@ -121,7 +119,8 @@ public class Drivetrain extends SubsystemBase {
     swerveDrive.setModuleEncoderAutoSynchronize(
         false, 1); // Enable if you want to resynchronize your absolute encoders and motor encoders
     // periodically when they are not moving.
-    // swerveDrive.setChassisDiscretization(true, false, Constants.DrivetrainConstants.kSecondOrderKinematicsDt);
+    // swerveDrive.setChassisDiscretization(true, false,
+    // Constants.DrivetrainConstants.kSecondOrderKinematicsDt);
     swerveDrive
         .pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder
     // and push the offsets onto it. Throws warning if not possible
@@ -340,8 +339,7 @@ public class Drivetrain extends SubsystemBase {
 
     // TODO: plus or minus mount pitch?
     double dz =
-         Units.inchesToMeters(10)
-            / Math.tan((-bestTarget.getPitch() + 24) * Math.PI / 180.0);
+        Units.inchesToMeters(10) / Math.tan((-bestTarget.getPitch() + 24) * Math.PI / 180.0);
     double dx = dz * Math.tan(bestTarget.getYaw() * Math.PI / 180.0);
 
     return new Translation2d(dx, dz);
@@ -403,7 +401,10 @@ public class Drivetrain extends SubsystemBase {
     // set desired module states to target states
     // SwerveModuleState[] states = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
-      modules[i].setDesiredState(new SwerveModuleState(targetVelocity, Rotation2d.fromDegrees(targetHeading)), false, true);
+      modules[i].setDesiredState(
+          new SwerveModuleState(targetVelocity, Rotation2d.fromDegrees(targetHeading)),
+          false,
+          true);
     }
 
     // log heading and velocity error
@@ -496,13 +497,13 @@ public class Drivetrain extends SubsystemBase {
                   * multiplier;
 
           // TODO: uncomment for aim assist
+          //
+          // double headingControllerOutput =
+          //     this.headingController.calculate(getYawDeg(), this.getNoteAngle());
 
-          double headingControllerOutput =
-              controller.headingCalculate(getYawDeg(), this.getNoteAngle());
-
-          if (Math.abs(this.getNoteAngle()) > DrivetrainConstants.kHeadingTolerance)
-            omega += 0.5 * headingControllerOutput;
-
+          // if (Math.abs(this.getNoteAngle()) > DrivetrainConstants.kHeadingTolerance)
+          //   omega += 0.5 * headingControllerOutput;
+          //
           // Translation2d strafeVec =
           //     new Translation2d(
           //             DrivetrainConstants.kMaxTeleopSpeedPercent
@@ -518,7 +519,8 @@ public class Drivetrain extends SubsystemBase {
           //         .rotateBy(Rotation2d.fromDegrees(90.0));
 
           ChassisSpeeds speeds =
-          swerveDrive.swerveController.getTargetSpeeds(controller.getLeftY(),
+              swerveDrive.swerveController.getTargetSpeeds(
+                  controller.getLeftY(),
                   controller.getLeftX(),
                   controller.getRightX() * Math.PI,
                   swerveDrive.getOdometryHeading().getRadians(),
@@ -528,8 +530,10 @@ public class Drivetrain extends SubsystemBase {
           Translation2d strafeVec =
               SwerveMath.scaleTranslation(
                   new Translation2d(
-                      -MathUtil.applyDeadband(controller.getLeftY(), 0.03) * swerveDrive.getMaximumVelocity(),
-                      -MathUtil.applyDeadband(controller.getLeftX(), 0.03) * swerveDrive.getMaximumVelocity()),
+                      -MathUtil.applyDeadband(controller.getLeftY(), 0.03)
+                          * swerveDrive.getMaximumVelocity(),
+                      -MathUtil.applyDeadband(controller.getLeftX(), 0.03)
+                          * swerveDrive.getMaximumVelocity()),
                   0.8);
 
           if (MyAlliance.isRed()) strafeVec = strafeVec.rotateBy(Rotation2d.fromDegrees(180));
@@ -542,20 +546,7 @@ public class Drivetrain extends SubsystemBase {
         })
         .finallyDo(this::stop);
   }
-public Command aimAtNote(double tolerance)
-  {
-    SwerveController controller = swerveDrive.getSwerveController();
-    return run(
-        () -> {
-          drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.0,
-                                                      0.0,
-                                                      controller.headingCalculate(getYawDeg(),
-                                                                                  getRelativeNoteLocation()),
-                                                      getYawDeg())
-               );
-        }).until(() -> Math.abs(getNoteAngle() - (getYawDeg())) < tolerance);
-  } 
-  
+
   public Command driveCommand(
       DoubleSupplier throttleSupplier,
       DoubleSupplier strafeSupplier,
@@ -676,19 +667,19 @@ public Command aimAtNote(double tolerance)
 
   public Command zeroToPose(Pose2d pose) {
     return runOnce(
-            () -> {
-              Pose2d flippedPose;
-              if (MyAlliance.isRed()) {
-                flippedPose = GeometryUtil.flipFieldPose(pose);
-              } else {
-                flippedPose = pose;
-              }
-              resetPose(flippedPose);
-            }); 
+        () -> {
+          Pose2d flippedPose;
+          if (MyAlliance.isRed()) {
+            flippedPose = GeometryUtil.flipFieldPose(pose);
+          } else {
+            flippedPose = pose;
+          }
+          resetPose(flippedPose);
+        });
   }
 
   public Command zeroToPath(PathPlannerPath path) {
-    return zeroToPose(path.getPreviewStartingHolonomicPose()); 
+    return zeroToPose(path.getPreviewStartingHolonomicPose());
   }
 
   public Command sysIdDriveMotorCommand() {
