@@ -66,7 +66,6 @@ public class Drivetrain extends SubsystemBase {
     return instance;
   }
 
-  int x = 0;
   private SwerveDrive swerveDrive;
 
   private final PhotonCamera mainCamera;
